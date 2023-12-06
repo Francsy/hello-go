@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -126,7 +127,18 @@ the line`
 
 	var intSlice3 []int32 = make([]int32, 3, 8) // With the function we can create an array and specify the length (3) and the capacity (8). If not, the capacity will be the same as the length.
 	fmt.Println(intSlice3)
+
+	var strSlice = []string{"S", "L", "I", "C", "E"}
+	var strBuilder strings.Builder // The way to append values to make a string with no resources waste
+	for i := range strSlice {
+		strBuilder.WriteString(strSlice[i])
+	}
+	println("AQQUUUUIII")
+	var catStr = strBuilder.String()
+	fmt.Printf("\n%v\n", catStr)
+
 	// Map
+	// var myMap map[string]uint8 = make(map[string]uint8)
 
 	myMap := make(map[string]int)
 	myMap["Rick"] = 70
@@ -139,6 +151,14 @@ the line`
 	myMap2 := map[string]int{"Beth": 45, "Jerry": 45, "Summer": 17} // Declare with keys-values
 	fmt.Println(myMap2)                                             // Output: map[Beth:45 Jerry:45 Summer:17]
 
+	var age, ok = myMap2["Beth"] // the second variable with return true if the key is in the map
+	delete(myMap2, "Jerry")      // We can delete a key and value
+	if ok {
+		fmt.Printf("The ageis %v", age)
+	} else {
+		fmt.Printf("Invalid name")
+	}
+
 	// List
 
 	myList := list.New()
@@ -148,7 +168,7 @@ the line`
 
 	fmt.Println(myList.Front().Value) // Output: 1
 
-	// Loop
+	// For loop
 
 	scifiFilms := [3]string{"Blade Runner", "The Matrix", "Back to the Future"} // or => var scifiFilms [3]string = [3]string{"Blade Runner", "The Matrix", "Back to the Future"}
 
@@ -159,7 +179,7 @@ the line`
 	}
 
 	for key, value := range myMap2 {
-		fmt.Println(key, value) // Output: Beth 45 Jerry 45 Summer 17
+		fmt.Printf("Name: %v, Age: %v", key, value) // Output: Name: Beth Age: 45 Name: Summer Age: 17
 	}
 	for index := range scifiFilms {
 		fmt.Println(scifiFilms[index])
@@ -168,21 +188,43 @@ the line`
 		fmt.Println(index, value)
 	}
 
+	// While loop: We could do it like hat
+	var i int = 0
+	for i < 10 {
+		fmt.Println(i)
+		i += 1
+	}
+
+	/* 	or:
+		for {
+		if i==10 {
+			break
+		}
+		fmt.Println(i)
+	 	i += 1
+		}
+	*/
+
 	// Function
 
 	var stringToPrint string = myFunction("Hello go") //This version just return the parameter in the argument as a string, it is a good practise to write the return type, not using := shortcut
 	println(stringToPrint)
 
-	// Estructura
+	// Structure (go down to see the defines structures)
 
-	type MyStruct struct {
-		name  string
-		power int
-	}
-
-	myStruct := MyStruct{"Rick", 100}
-	fmt.Println(myStruct)      // Output: {Rick 100}
+	myStruct := MyStruct{"Rick", 100, Vehicle{"Space Adventures"}, 50} // Or myStruct := MyStruct{name:"Rick", power:100, Vehicle{"Space Adventures"}}
+	fmt.Println(myStruct)
 	fmt.Println(myStruct.name) // Output: {Rick}
+	fmt.Println(myStruct.vehicleInfo.brand)
+	fmt.Println(myStruct.int)
+
+	myStruct.restorePower() // Check how to create the method below
+
+	var anonymousStruct = struct { // Not reusable
+		key1 uint8
+		key2 uint8
+	}{25, 34}
+	fmt.Println(anonymousStruct.key1, anonymousStruct.key2)
 
 	// Handle errors:
 
@@ -232,4 +274,20 @@ func intDivision(numerator int, denominator int) (int, int, error) { // Three re
 	var result int = numerator / denominator
 	var remainder int = numerator % denominator
 	return result, remainder, err
+}
+
+type MyStruct struct {
+	name        string
+	power       int
+	vehicleInfo Vehicle
+	int
+}
+
+type Vehicle struct {
+	brand string
+}
+
+func (e MyStruct) restorePower() int { // Create method for MyStruct structure
+	e.power = 100
+	return e.power
 }
